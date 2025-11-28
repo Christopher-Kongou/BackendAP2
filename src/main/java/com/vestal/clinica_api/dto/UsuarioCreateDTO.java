@@ -1,25 +1,13 @@
 package com.vestal.clinica_api.dto;
 
 public class UsuarioCreateDTO {
-
-    private String login;
-    private String senha;
-    private String perfil;
-
-    public UsuarioCreateDTO() {}
-
-    public UsuarioCreateDTO(String login, String senha, String perfil) {
-        this.login = login;
-        this.senha = senha;
-        this.perfil = perfil;
-    }
-
-    public String getLogin() { return login; }
-    public void setLogin(String login) { this.login = login; }
-
-    public String getSenha() { return senha; }
-    public void setSenha(String senha) { this.senha = senha; }
-
-    public String getPerfil() { return perfil; }
-    public void setPerfil(String perfil) { this.perfil = perfil; }
+    public String nome;
+    public String cpf;
+    public String dataNascimento;
+    public String telefone;
+    public String email;
+    public String login;
+    public String senha;
+    public String papel; // Paciente ou Profissional
+    public String especialidade; // só se for profissional
 }

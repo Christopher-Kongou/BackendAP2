@@ -1,4 +1,5 @@
 package com.vestal.clinica_api.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,13 +14,21 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // front-end
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
+                        // adicione as origens que seu front usa
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "http://127.0.0.1:3000",
+                                "http://localhost:5500",
+                                "http://127.0.0.1:5500"
+                        )
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
 }
+
 //package com.vestal.clinica_api.config;
 //
 //import org.springframework.context.annotation.Bean;

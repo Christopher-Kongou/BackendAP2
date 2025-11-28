@@ -1,21 +1,24 @@
 package com.vestal.clinica_api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "ProfissionaisSaude")
 public class ProfissionalSaude {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_profissional")   // 🔥 Nome correto do campo no banco
     private Long id;
+
+    @Column(nullable = false)
     private String especialidade;
+
+    @Column(name = "registro_profissional", nullable = false)
     private String registroProfissional;
 
     @ManyToOne
+    @JoinColumn(name = "pessoa_id", nullable = false)   // 🔥 Campo correto para FK
     private Pessoa pessoa;
 
     public ProfissionalSaude() {}
@@ -39,9 +42,16 @@ public class ProfissionalSaude {
     public Pessoa getPessoa() { return pessoa; }
     public void setPessoa(Pessoa pessoa) { this.pessoa = pessoa; }
 
+    public String getNome() {
+        return pessoa != null ? pessoa.getNome() : null;
+    }
+
     @Override
     public String toString() {
-        return "ProfissionalSaude{id=" + id + ", especialidade='" + especialidade +
-               "', registroProfissional='" + registroProfissional + "', pessoa=" + pessoa + "}";
+        return "ProfissionalSaude{id=" + id +
+                ", especialidade='" + especialidade + '\'' +
+                ", registroProfissional='" + registroProfissional + '\'' +
+                ", pessoa=" + pessoa +
+                '}';
     }
 }

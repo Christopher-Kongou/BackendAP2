@@ -21,32 +21,41 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/login",
-                                "/auth/refresh",
-                                "/public/**"
-                        ).permitAll()
+        http.csrf(csrf -> csrf.disable());
 
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+        http.sessionManagement(sm ->
+                sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+        http.authorizeHttpRequests(auth -> auth
+
+                // liberar login
+                .requestMatchers("/api/auth/login").permitAll()
+
+                // liberar criação de usuário
+                .requestMatchers("/api/usuarios/criar").permitAll()
+
+                // liberar o front-end estático
+                .requestMatchers("/public/**").permitAll()
+
+                // TODO: Remover quando estiver pronto
+                .anyRequest().permitAll()
+        );
+
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // NÃO vamos usar hash enquanto o banco usa senha simples
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 }
+

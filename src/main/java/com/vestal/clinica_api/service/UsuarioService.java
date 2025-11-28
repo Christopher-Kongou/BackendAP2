@@ -1,48 +1,35 @@
 package com.vestal.clinica_api.service;
 
-import com.vestal.clinica_api.model.Usuario;
-import com.vestal.clinica_api.repository.UsuarioJpaRepository;
+import com.vestal.clinica_api.dto.UsuarioCreateDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
 
-    private final UsuarioJpaRepository repository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private EntityManager em;
 
-    public UsuarioService(UsuarioJpaRepository repository) {
-        this.repository = repository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public List<Usuario> listarTodos() {
-        return repository.findAll();
-    }
+    @Transactional
+    public void registrarUsuario(UsuarioCreateDTO dto) {
 
-    public Usuario salvar(Usuario u) {
-        if (u.getSenha() != null) {
-            u.setSenha(passwordEncoder.encode(u.getSenha())); // hash da senha
-        }
-        return repository.save(u);
-    }
+        String senhaHash = encoder.encode(dto.senha);
 
-    public void deletar(Long id) {
-        repository.deleteById(id);
-    }
-
-    // ✅ Método necessário para autenticação
-    public Optional<Usuario> autenticar(String username, String senha) {
-        Optional<Usuario> usuarioOpt = repository.findByLogin(username); // findByLogin ou findByUsername no repository
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            if (passwordEncoder.matches(senha, usuario.getSenha())) {
-                return Optional.of(usuario);
-            }
-        }
-        return Optional.empty();
+        em.createNativeQuery("CALL sp_registrar_usuario(?,?,?,?,?,?,?,?,?)")
+                .setParameter(1, dto.nome)
+                .setParameter(2, dto.cpf)
+                .setParameter(3, dto.dataNascimento)
+                .setParameter(4, dto.telefone)
+                .setParameter(5, dto.email)
+                .setParameter(6, dto.login)
+                .setParameter(7, senhaHash)
+                .setParameter(8, dto.papel)
+                .setParameter(9, dto.especialidade)
+                .executeUpdate();
     }
 }

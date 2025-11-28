@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatusCompromissoRepository extends JpaRepository<StatusCompromisso, Long> {}
+public interface StatusCompromissoRepository extends JpaRepository<StatusCompromisso, Long> {
+    StatusCompromisso findByNome(String nome);
+}

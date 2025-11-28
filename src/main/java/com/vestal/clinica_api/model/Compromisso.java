@@ -1,49 +1,52 @@
 package com.vestal.clinica_api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "Compromissos")
 public class Compromisso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "compromisso_id") // Correção de mapeamento
     private Long id;
-    private LocalDateTime dataHora;
 
     @ManyToOne
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
     @ManyToOne
+    @JoinColumn(name = "profissional_id")
     private ProfissionalSaude profissional;
 
     @ManyToOne
-    private StatusCompromisso status;
+    @JoinColumn(name = "local_id")
+    private Local local;
 
     @ManyToOne
+    @JoinColumn(name = "tipo_compromisso_id")
     private TipoCompromisso tipo;
 
-    public Compromisso() {}
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private StatusCompromisso status;
 
-    public Compromisso(Long id, LocalDateTime dataHora, Paciente paciente,
-                       ProfissionalSaude profissional, StatusCompromisso status, TipoCompromisso tipo) {
-        this.id = id;
-        this.dataHora = dataHora;
-        this.paciente = paciente;
-        this.profissional = profissional;
-        this.status = status;
-        this.tipo = tipo;
-    }
+    @Column(name = "data_hora_inicio")
+    private LocalDateTime dataHoraInicio;
 
+    @Column(name = "data_hora_fim")
+    private LocalDateTime dataHoraFim;
+
+    @Column(name = "observacao")
+    private String observacao;
+
+    @Column(name = "agendado_por_usuario_id")
+    private Long agendadoPorUsuarioId;
+
+    // GETTERS e SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public LocalDateTime getDataHora() { return dataHora; }
-    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
 
     public Paciente getPaciente() { return paciente; }
     public void setPaciente(Paciente paciente) { this.paciente = paciente; }
@@ -51,15 +54,24 @@ public class Compromisso {
     public ProfissionalSaude getProfissional() { return profissional; }
     public void setProfissional(ProfissionalSaude profissional) { this.profissional = profissional; }
 
-    public StatusCompromisso getStatus() { return status; }
-    public void setStatus(StatusCompromisso status) { this.status = status; }
+    public Local getLocal() { return local; }
+    public void setLocal(Local local) { this.local = local; }
 
     public TipoCompromisso getTipo() { return tipo; }
     public void setTipo(TipoCompromisso tipo) { this.tipo = tipo; }
 
-    @Override
-    public String toString() {
-        return "Compromisso{id=" + id + ", dataHora=" + dataHora + ", paciente=" + paciente +
-               ", profissional=" + profissional + ", status=" + status + ", tipo=" + tipo + "}";
-    }
+    public StatusCompromisso getStatus() { return status; }
+    public void setStatus(StatusCompromisso status) { this.status = status; }
+
+    public LocalDateTime getDataHoraInicio() { return dataHoraInicio; }
+    public void setDataHoraInicio(LocalDateTime dataHoraInicio) { this.dataHoraInicio = dataHoraInicio; }
+
+    public LocalDateTime getDataHoraFim() { return dataHoraFim; }
+    public void setDataHoraFim(LocalDateTime dataHoraFim) { this.dataHoraFim = dataHoraFim; }
+
+    public String getObservacao() { return observacao; }
+    public void setObservacao(String observacao) { this.observacao = observacao; }
+
+    public Long getAgendadoPorUsuarioId() { return agendadoPorUsuarioId; }
+    public void setAgendadoPorUsuarioId(Long agendadoPorUsuarioId) { this.agendadoPorUsuarioId = agendadoPorUsuarioId; }
 }

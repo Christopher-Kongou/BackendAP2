@@ -23,7 +23,7 @@ public class UsuarioRepository {
         query.registerStoredProcedureParameter("p_login", String.class, jakarta.persistence.ParameterMode.IN);
         query.setParameter("p_login", login);
 
-        List<Object[]> resultList = query.getResultList();
+        List<Object[]> resultList = (List<Object[]>) query.getResultList();
 
         if (resultList.isEmpty()) {
             return null;

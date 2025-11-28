@@ -3,6 +3,7 @@ package com.vestal.clinica_api.controller;
 import com.vestal.clinica_api.repository.UsuarioRepository;
 import com.vestal.clinica_api.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -16,6 +17,8 @@ public class AuthController {
 
     @Autowired
     private TokenService tokenService;
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> body) {
@@ -31,7 +34,7 @@ public class AuthController {
 
         String senhaHashBanco = (String) result.get("senha_hash");
 
-        if (!senha.equals(senhaHashBanco)) {
+        if (!encoder.matches(senha, senhaHashBanco)) {
             return Map.of("erro", "Senha incorreta");
         }
 

@@ -1,16 +1,20 @@
 package com.vestal.clinica_api.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "Pacientes") // Adicionado para garantir o nome correto da tabela
 public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "paciente_id") // Correção de mapeamento
     private Long id;
     private String planoSaude;
 
